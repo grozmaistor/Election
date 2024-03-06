@@ -1,9 +1,10 @@
 package grozdan.test.election.core;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
-public class VotingEngine implements Runnable {
+public class VotingEngine {
     public static class Ballot {
         private final int number;
         private long votes = 0;
@@ -58,6 +59,23 @@ public class VotingEngine implements Runnable {
     private volatile int voted = 0;
     private LocalDateTime startDateTime = null;
     private LocalDateTime endDateTime = null;
+    private final TimerTask startTimer = new TimerTask() {
+        @Override
+        public void run() {
+            System.out.println("Election is open / Start of voting.");
+        }
+    };
+    private final TimerTask endTimer = new TimerTask() {
+        @Override
+        public void run() {
+            System.out.println("Election is closed / End of voting.");
+            try {
+                setWinningBallot(getFirstBallot());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     private Ballot [] ballots;
     private volatile Set<Ballot> ballotSet = new TreeSet<>(Ballot.voteComparator());
@@ -83,6 +101,11 @@ public class VotingEngine implements Runnable {
             ballots[i] = ballot;
             ballotSet.add(ballot);
         }
+        Date startDate = Date.from(startDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        new Timer().schedule(startTimer, startDate);
+
+        Date endDate = Date.from(endDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        new Timer().schedule(endTimer, endDate);
     }
 
     public void countVote(String ipAddress, int ballotNumber) throws ElectionException {
@@ -170,33 +193,6 @@ public class VotingEngine implements Runnable {
 
     public boolean isRunning() {
         return ! isClosed() && ! isWaiting();
-    }
-
-    @Override
-    public void run() {
-        while(isWaiting()) {
-            try {
-                //TODO: replace with Timer
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                // Do nothing
-            }
-        }
-        System.out.println("Election is open / Start of voting.");
-        while(!isClosed()) {
-            try {
-                //TODO: replace with Timer
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                // Do nothing
-            }
-        }
-        System.out.println("Election is closed / End of voting.");
-        try {
-            setWinningBallot(getFirstBallot());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public UUID getId() {

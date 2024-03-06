@@ -2,13 +2,9 @@ package grozdan.test.election.core;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-public enum ElectionManager implements AutoCloseable {
+public enum ElectionManager {
     INSTANCE;
-    public static final int MAX_ENGINES = 1;
-    private ExecutorService executor = Executors.newFixedThreadPool(MAX_ENGINES);
     private volatile VotingEngine votingEngine = null;
 
     /**
@@ -27,11 +23,6 @@ public enum ElectionManager implements AutoCloseable {
 
         UUID id = getNextElectionUUID();
         votingEngine = new VotingEngine(id, ballotCount, registeredVoters, startDateTime, endDateTime);
-        try {
-            executor.submit(votingEngine);
-        } catch (Exception e) {
-            throw new ElectionException("VotingEngine error!", e);
-        }
 
         return id;
     }
@@ -53,18 +44,6 @@ public enum ElectionManager implements AutoCloseable {
             return votingEngine.getWinner();
         }
         throw new ElectionException("No election is created");
-    }
-
-    @Override
-    public void close() {
-        if (executor != null && !executor.isShutdown()) {
-            try {
-                executor.shutdownNow();
-                executor = null;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     private static UUID getNextElectionUUID() {
