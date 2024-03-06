@@ -7,15 +7,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
 public class DateTimeUtils {
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     public static LocalDateTime parse(String dateTime) throws ElectionException {
         try {
-            LocalDateTime parsedDateTime = LocalDateTime.parse(dateTime, formatter);
-            return parsedDateTime;
+            return LocalDateTime.parse(dateTime, formatter);
         } catch (DateTimeParseException e) {
             e.printStackTrace();
         }
-
         throw new ElectionException("Date " + dateTime + " can not be parsed to a date with the available formats!");
     }
 }

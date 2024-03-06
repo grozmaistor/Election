@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ElectionServiceApplication {
     public static void main(String[] args) {
-        System.out.println("Hello and welcome to Election!");
+        System.out.println("Hello and welcome to  * E L E C T I O N *  !");
         SpringApplication.run(ElectionServiceApplication.class, args);
     }
 }

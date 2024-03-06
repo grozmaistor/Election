@@ -90,15 +90,4 @@ public enum VoteValidator {
         }
     }
 
-    public void authenticate(String ipAddress) throws ElectionException {
-        if (!isLocalHost(ipAddress)) {
-            System.out.println("IP address " + ipAddress + " was not authenticated!");
-            throw new ElectionException("Request is allowed only if it's made from IP address = 127.0.0.1");
-        }
-        System.out.println("IP address " + ipAddress + " was successfully authenticated.");
-    }
-
-    private boolean isLocalHost(String ipAddress) {
-        return true;
-    }
 }
