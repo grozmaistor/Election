@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "7c18418c-9f0a-4dbe-a22b-c59b5a3fdc86",
+		"name": "E L E C T I O N",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6027997"
+	},
+	"item": [
+		{
+			"name": "WINNER check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8080/election",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"election"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ELECTION create new",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"candidates\": 3,\r\n    \"registeredVoters\": 11,\r\n    \"startDateTime\": \"2024-03-05 07:00:00\",\r\n    \"endDateTime\": \"2024-03-06 00:00:00\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/election",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"election"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "VOTE",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"ballot\": 3\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8080/election",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"election"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
