@@ -53,4 +53,3 @@ The *postman* folder contains predefined collection of API calls that can be use
 ### TODO:
 1. Improve error handling and messaging
 2. Add SpringBoot Service layer between the rest controller and the ElectionManager.
-3. Replace thread counting with Timer/TimerTask.
