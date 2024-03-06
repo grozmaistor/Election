@@ -1,5 +1,7 @@
 package grozdan.test.election.utils;
 
+import grozdan.test.election.core.ElectionException;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -54,24 +56,24 @@ public enum VoteValidator {
      * @param <E>
      */
     public static class FixedSizeQueue<E> {
-        private final int size;
-        private volatile int elementCount = 0;
+        private final int maxSize;
+        private volatile int size = 0;
         private final Queue<E> queue = new LinkedList<>();
 
-        public FixedSizeQueue(int size) {
-            this.size = size;
+        public FixedSizeQueue(int maxSize) {
+            this.maxSize = maxSize;
         }
         public synchronized void add(E e) {
-            if(elementCount == size) {
+            if(size == maxSize) {
                 queue.poll();
             } else {
-                elementCount++;
+                size++;
             }
             queue.add(e);
         }
         public synchronized E poll() {
-            if (elementCount > 0) {
-                elementCount--;
+            if (size > 0) {
+                size--;
                 return queue.poll();
             } else {
                 return null;
@@ -80,8 +82,23 @@ public enum VoteValidator {
         public synchronized E peek() {
             return queue.peek();
         }
+        public int getMaxSize() {
+            return maxSize;
+        }
         public synchronized int getSize() {
             return size;
         }
+    }
+
+    public void authenticate(String ipAddress) throws ElectionException {
+        if (!isLocalHost(ipAddress)) {
+            System.out.println("IP address " + ipAddress + " was not authenticated!");
+            throw new ElectionException("Request is allowed only if it's made from IP address = 127.0.0.1");
+        }
+        System.out.println("IP address " + ipAddress + " was successfully authenticated.");
+    }
+
+    private boolean isLocalHost(String ipAddress) {
+        return true;
     }
 }

@@ -5,23 +5,19 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public enum ElectionManager {
+public enum ElectionManager implements AutoCloseable {
     INSTANCE;
     public static final int MAX_ENGINES = 1;
     private ExecutorService executor = Executors.newFixedThreadPool(MAX_ENGINES);
-    private volatile UUID currentElectionId;
-    //private VotingEngine[] votingEngines = new VotingEngine[MAX_ENGINES];
-
     private volatile VotingEngine votingEngine = null;
-    private Set<String> ipAddressCache = new HashSet<>();
 
     /**
      * Create new election and return its election id
      * @return election id
      */
     public synchronized UUID createElection(int ballotCount, long registeredVoters, LocalDateTime startDateTime, LocalDateTime endDateTime) throws ElectionException {
-        if (hasRunningElection()) {
-            throw new ElectionException("There is already a running election there!");
+        if (hasWaitingElection() || hasRunningElection()) {
+            throw new ElectionException("There is already a waiting/running election there!");
         }
 
         if (votingEngine != null) {
@@ -40,32 +36,39 @@ public enum ElectionManager {
         return id;
     }
 
-    public boolean hasRunningElection() {
-        return votingEngine != null && ! votingEngine.isClosed();
-    }
-
     public boolean hasElection() {
         return votingEngine != null;
     }
-
-    private static UUID getNextElectionUUID() {
-        return UUID.randomUUID();
+    public boolean hasWaitingElection() {
+        return votingEngine != null && votingEngine.isWaiting();
+    }
+    public boolean hasRunningElection() {
+        return votingEngine != null && !votingEngine.isWaiting() && !votingEngine.isClosed();
+    }
+    public boolean hasWinner() {
+        return votingEngine!=null && votingEngine.hasWinner();
+    }
+    public int getWinner() throws ElectionException {
+        if (votingEngine!=null) {
+            return votingEngine.getWinner();
+        }
+        throw new ElectionException("No election is created");
     }
 
+    @Override
     public void close() {
         if (executor != null && !executor.isShutdown()) {
             try {
                 executor.shutdownNow();
                 executor = null;
             } catch (Exception e) {
-                System.out.println(e.getMessage());
                 e.printStackTrace();
             }
         }
     }
 
-    private boolean hasVoted(String ipAddress) {
-        return ipAddressCache.contains(ipAddress);
+    private static UUID getNextElectionUUID() {
+        return UUID.randomUUID();
     }
 
     private void putInArchive(VotingEngine votingEngine) throws ElectionException {
@@ -79,6 +82,10 @@ public enum ElectionManager {
                 votingEngine.getBallots()
                 );
         ElectionArchive.put(result);
+        System.out.println("Election with id: " + votingEngine.getId().toString() + " was put in the archive.");
     }
 
+    public void countVote(int ballot) throws ElectionException {
+        votingEngine.countVote(ballot);
+    }
 }

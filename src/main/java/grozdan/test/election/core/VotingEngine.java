@@ -86,15 +86,24 @@ public class VotingEngine implements Runnable {
     }
 
     public void countVote(int ballotNumber) throws ElectionException {
-        if (canVote()) {
-            synchronized (this) {
-                Ballot b = ballots[ballotNumber - 1];
-                ballotSet.remove(b);
-                b.votes++;
-                ballotSet.add(b);
-                voted++;
+        if (isRunning()) {
+            if (ballotNumber < 1 || ballotNumber > ballotCount) {
+                throw new ElectionException("A candidate with such number doesn't exist.");
+            }
+            if (voted >= registeredVoters) {
+                throw new ElectionException("All voters have voted.");
+            }
 
-                checkWinner();
+            synchronized (this) {
+                if (isRunning()) {
+                    Ballot b = ballots[ballotNumber - 1];
+                    ballotSet.remove(b);
+                    b.votes++;
+                    ballotSet.add(b);
+                    voted++;
+
+                    checkWinner();
+                }
             }
         }
     }
@@ -126,6 +135,7 @@ public class VotingEngine implements Runnable {
         System.out.println("Ballot " + maxVotedBallot.getNumber() + " is the winner!");
         winningBallot = maxVotedBallot;
     }
+
     private Ballot getFirstBallot() throws ElectionException {
         Optional<Ballot> ballotOptional = ballotSet.stream().findFirst();
         if (ballotOptional.isEmpty()) {
@@ -147,7 +157,7 @@ public class VotingEngine implements Runnable {
         }
     }
 
-    public boolean isNotStarted() {
+    public boolean isWaiting() {
         return LocalDateTime.now().isBefore(startDateTime);
     }
 
@@ -155,34 +165,35 @@ public class VotingEngine implements Runnable {
         return LocalDateTime.now().isAfter(endDateTime);
     }
 
-    public boolean canVote() {
-        return ! isClosed() && ! isNotStarted();
+    public boolean isRunning() {
+        return ! isClosed() && ! isWaiting();
     }
-
 
     @Override
     public void run() {
-        while(isNotStarted()) {
+        while(isWaiting()) {
             try {
+                //TODO: replace with Timer
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 // Do nothing
             }
         }
-        System.out.println("Start of voting.");
+        System.out.println("Election is open / Start of voting.");
         while(!isClosed()) {
             try {
+                //TODO: replace with Timer
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 // Do nothing
             }
         }
+        System.out.println("Election is closed / End of voting.");
         try {
             setWinningBallot(getFirstBallot());
         } catch (Exception e) {
-            //TODO:?
+            e.printStackTrace();
         }
-        System.out.println("End of voting.");
     }
 
     public UUID getId() {
