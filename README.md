@@ -40,3 +40,17 @@ Ballot 1 is the winner!
 <br>
 While voting a winner may be elected. The winning ballot will be logged in the console and can be checked by an api call. But the election will not be closed unless the end date.
 After declaring a winner, but before the end date, other voters who haven't voted yet may still vote.
+
+<br>
+<br>
+
+### POSTMAN
+The *postman* folder contains predefined collection of API calls that can be used to call the server.
+
+<br>
+<br>
+
+### TODO:
+1. Improve error handling and messaging
+2. Add SpringBoot Service layer between the rest controller and the ElectionManager.
+3. Replace thread counting with Timer/TimerTask.
