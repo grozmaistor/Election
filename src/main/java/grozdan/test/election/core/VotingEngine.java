@@ -85,7 +85,7 @@ public class VotingEngine implements Runnable {
         }
     }
 
-    public void countVote(int ballotNumber) throws ElectionException {
+    public void countVote(String ipAddress, int ballotNumber) throws ElectionException {
         if (isRunning()) {
             if (ballotNumber < 1 || ballotNumber > ballotCount) {
                 throw new ElectionException("A candidate with such number doesn't exist.");
@@ -96,12 +96,15 @@ public class VotingEngine implements Runnable {
 
             synchronized (this) {
                 if (isRunning()) {
+                    if (hasVoted(ipAddress)) {
+                        throw new ElectionException("A vote by this IP has already been counted.");
+                    }
                     Ballot b = ballots[ballotNumber - 1];
                     ballotSet.remove(b);
                     b.votes++;
                     ballotSet.add(b);
                     voted++;
-
+                    markVoted(ipAddress);
                     checkWinner();
                 }
             }
@@ -221,5 +224,13 @@ public class VotingEngine implements Runnable {
 
     public Ballot[] getBallots() {
         return ballots;
+    }
+
+    private final Set<String> votedAddressesCache = Collections.synchronizedSet(new HashSet<>());
+    private boolean hasVoted(String ipAddress) {
+        return votedAddressesCache.contains(ipAddress);
+    }
+    private void markVoted(String ipAddress) {
+        votedAddressesCache.add(ipAddress);
     }
 }

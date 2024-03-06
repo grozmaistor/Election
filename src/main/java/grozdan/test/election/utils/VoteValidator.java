@@ -1,7 +1,6 @@
 package grozdan.test.election.utils;
 
 import grozdan.test.election.core.ElectionException;
-import grozdan.test.election.web.api.ElectionRequest;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -11,16 +10,7 @@ public enum VoteValidator {
 
     public final static int WINNER_CHECK_LIMIT = 3;
     public final static int WINNER_CHECK_PER_MINUTES = 1;
-    private final Set<String> votedAddressesCache = Collections.synchronizedSet(new HashSet<>());
     private final Map<String, FixedSizeQueue<LocalDateTime>> checkWinnerCache = new HashMap<>();
-
-    public boolean hasVoted(String ipAddress) {
-        return votedAddressesCache.contains(ipAddress);
-    }
-
-    public void markVoted(String ipAddress) {
-        votedAddressesCache.add(ipAddress);
-    }
 
     public boolean winnerCheckAllowed(String ipAddress) {
         LocalDateTime now = LocalDateTime.now();
@@ -47,7 +37,6 @@ public enum VoteValidator {
     }
 
     public void reset() {
-        votedAddressesCache.clear();
         checkWinnerCache.clear();
     }
 

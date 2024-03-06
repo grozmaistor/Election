@@ -52,7 +52,7 @@ public class ElectionControllerImpl implements ElectionController {
     }
 
     @Override
-    public ResponseEntity<String> vote(@RequestBody BallotRequest ballotRequest) {
+    public ResponseEntity<String> vote(@RequestBody BallotRequest ballotRequest, HttpServletRequest request) {
         if (!ElectionManager.INSTANCE.hasElection()) {
             return ResponseEntity.status(HttpStatus.OK).body("No election has been created.");
         }
@@ -62,7 +62,7 @@ public class ElectionControllerImpl implements ElectionController {
 
         if (ElectionManager.INSTANCE.hasRunningElection()) {
             try {
-                ElectionManager.INSTANCE.countVote(ballotRequest.ballot());
+                ElectionManager.INSTANCE.countVote(request.getRemoteAddr(), ballotRequest.ballot());
                 return ResponseEntity.status(HttpStatus.OK).body("Vote counted");
             } catch (ElectionException e) {
                 return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());

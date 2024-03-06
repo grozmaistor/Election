@@ -85,7 +85,7 @@ public enum ElectionManager implements AutoCloseable {
         System.out.println("Election with id: " + votingEngine.getId().toString() + " was put in the archive.");
     }
 
-    public void countVote(int ballot) throws ElectionException {
-        votingEngine.countVote(ballot);
+    public void countVote(String ipAddress, int ballot) throws ElectionException {
+        votingEngine.countVote(ipAddress, ballot);
     }
 }

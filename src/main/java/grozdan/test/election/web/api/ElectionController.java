@@ -12,7 +12,7 @@ public interface ElectionController {
 
     @PutMapping
     @ResponseBody
-    ResponseEntity<String> vote(@RequestBody BallotRequest ballotRequest);
+    ResponseEntity<String> vote(@RequestBody BallotRequest ballotRequest, HttpServletRequest request);
 
     @GetMapping
     @ResponseBody
