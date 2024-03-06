@@ -29,7 +29,14 @@ public class ElectionControllerImpl implements ElectionController {
             startDateTime = DateTimeUtils.parse(electionRequest.startDateTime());
             endDateTime = DateTimeUtils.parse(electionRequest.endDateTime());
         } catch (ElectionException dte) {
-            return ResponseEntity.badRequest().body("Start/End date not in the required format: 'yyyy-MM-dd hh:mm:ss'.");
+            return ResponseEntity.badRequest().body("Start & End election dates must be in the required format: 'yyyy-MM-dd hh:mm:ss'.");
+        }
+
+        try {
+            VoteValidator.INSTANCE.validateCreateParameters(
+                    electionRequest.ballotCount(), electionRequest.registeredVoters(), startDateTime, endDateTime);
+        } catch (ElectionException e) {
+            return ResponseEntity.status(HttpStatus.OK).body(e.getMessage());
         }
 
         try {

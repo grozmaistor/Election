@@ -1,6 +1,7 @@
 package grozdan.test.election.utils;
 
 import grozdan.test.election.core.ElectionException;
+import grozdan.test.election.web.api.ElectionRequest;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -49,6 +50,7 @@ public enum VoteValidator {
         votedAddressesCache.clear();
         checkWinnerCache.clear();
     }
+
     /**
      * Fixed size queue with automatic head element removal.
      * When the queue is full, adding an element will result in automatic removal of the head element.
@@ -90,4 +92,17 @@ public enum VoteValidator {
         }
     }
 
+    public void validateCreateParameters(
+            int ballotCount, long registeredVoters,
+            LocalDateTime startDateTime, LocalDateTime endDateTime) throws ElectionException {
+        if (!startDateTime.isBefore(endDateTime)) {
+            throw new ElectionException(" Start & End election dates should be a valid range.");
+        }
+        if (ballotCount < 1 || registeredVoters < 1) {
+            throw new ElectionException("Number of registered voters & number of candidates should be positive numbers.");
+        }
+        if(ballotCount >= registeredVoters) {
+            throw new ElectionException("Number of registered voters has to be more than the registered candidates.");
+        }
+    }
 }

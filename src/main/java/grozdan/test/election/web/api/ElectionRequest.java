@@ -9,7 +9,7 @@ public record ElectionRequest(
     int ballotCount,
 
     @JsonProperty("registeredVoters")
-    int registeredVoters,
+    long registeredVoters,
 
     @JsonProperty("startDateTime")
     //@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = DATE_TIME_FORMAT)
