@@ -51,5 +51,6 @@ The *postman* folder contains predefined collection of API calls that can be use
 <br>
 
 ### TODO:
-1. Improve error handling and messaging
-2. Add SpringBoot Service layer between the rest controller and the ElectionManager.
+1. Improve endpoint names and method calls.
+2. Improve error handling and messaging
+3. Add SpringBoot Service layer between the rest controller and the ElectionManager.
