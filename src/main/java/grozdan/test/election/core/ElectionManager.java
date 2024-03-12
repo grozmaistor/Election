@@ -51,7 +51,7 @@ public enum ElectionManager {
     }
 
     private void putInArchive(VotingEngine votingEngine) throws ElectionException {
-        ElectionResult result = new ElectionResult(
+        ElectionData result = new ElectionData(
                 votingEngine.getId(),
                 votingEngine.getStartDateTime(),
                 votingEngine.getEndDateTime(),
