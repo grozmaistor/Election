@@ -8,8 +8,8 @@ import java.util.Map;
  */
 public enum ElectionArchive {
     INSTANCE;
-    private final Map<String, ElectionResult> archive = new HashMap<>();
-    public static ElectionResult get(String id) throws ElectionException {
+    private final Map<String, ElectionData> archive = new HashMap<>();
+    public static ElectionData get(String id) throws ElectionException {
         if (INSTANCE.archive.containsKey(id)) {
             return INSTANCE.archive.get(id);
         } else {
@@ -17,7 +17,7 @@ public enum ElectionArchive {
         }
     }
 
-    public static void put(ElectionResult e) throws ElectionException {
+    public static void put(ElectionData e) throws ElectionException {
         if (INSTANCE.archive.containsKey(e.id().toString())) {
             throw new ElectionException("Election already exists in archive!");
         } else {

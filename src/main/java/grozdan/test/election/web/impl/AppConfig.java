@@ -11,7 +11,7 @@ public class AppConfig {
         FilterRegistrationBean<LocalhostFilter> registrationBean = new FilterRegistrationBean<>();
         LocalhostFilter localhostFilter = new LocalhostFilter();
         registrationBean.setFilter(localhostFilter);
-        registrationBean.addUrlPatterns("/election");
+        registrationBean.addUrlPatterns("/api/v1/election");
         registrationBean.setOrder(1);
         return registrationBean;
     }

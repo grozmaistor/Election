@@ -4,21 +4,25 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("/election")
+@RequestMapping("/api")
 public interface ElectionController {
-    @PostMapping
+    @PostMapping(value = "/election", produces = "application/json")
     @ResponseBody
     ResponseEntity<String> createElection(@RequestBody ElectionRequest electionRequest);
 
-    @PutMapping
+    @PostMapping(value = "/election/ballot", produces = "application/json")
     @ResponseBody
     ResponseEntity<String> vote(@RequestBody BallotRequest ballotRequest, HttpServletRequest request);
 
-    @GetMapping
+    @GetMapping(value = "/election", produces = "application/json")
     @ResponseBody
     ResponseEntity<String> checkWinner(HttpServletRequest request);
 
-    @GetMapping("/{id}")
+    @GetMapping("/elections")
+    @ResponseBody
+    ResponseEntity<String> getAllElectionsFromArchive();
+
+    @GetMapping("/elections/{id}")
     @ResponseBody
     ResponseEntity<String> getElectionFromArchive();
 }

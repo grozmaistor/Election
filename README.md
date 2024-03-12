@@ -13,8 +13,8 @@ powered by SpringBoot
   "endDateTime": "2024-03-06 20:00:00"
   }
 #
-2. To vote send a PUT request with JSON body containing the *ballot* number.
-- PUT: ~/election
+2. To vote send a POST request with JSON body containing the *ballot* number.
+- POST: ~/election/ballot
 - JSON body:
   {
   "ballot": 3

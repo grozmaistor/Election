@@ -17,7 +17,8 @@ public class LocalhostFilter extends HttpFilter {
             if (! clientIPAddress.equals(serverIPAddress)) {
                 System.out.println("IP address " + clientIPAddress + " is not authorized to make this call!");
                 response.reset();
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.setHeader("message", "IP address " + clientIPAddress + " is not authorized to make this call!");
                 return;
             }
         }
