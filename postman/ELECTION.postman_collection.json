@@ -12,12 +12,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:8080/election",
+					"raw": "localhost:8080/api/{{$ver}}/election",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"{{$ver}}",
 						"election"
 					]
 				}
@@ -31,7 +33,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"candidates\": 3,\r\n    \"registeredVoters\": 11,\r\n    \"startDateTime\": \"2024-03-05 07:00:00\",\r\n    \"endDateTime\": \"2024-03-06 00:00:00\"\r\n}",
+					"raw": "{\r\n    \"candidates\": 3,\r\n    \"registeredVoters\": 11,\r\n    \"startDateTime\": \"2024-03-07 07:00:00\",\r\n    \"endDateTime\": \"2024-03-07 11:15:00\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -39,12 +41,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/election",
+					"raw": "localhost:8080/api/{{$ver}}/election",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
+						"api",
+						"{{$ver}}",
 						"election"
 					]
 				}
@@ -54,7 +58,7 @@
 		{
 			"name": "VOTE",
 			"request": {
-				"method": "PUT",
+				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
@@ -66,17 +70,46 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/election",
+					"raw": "localhost:8080/api/{{$ver}}/election/ballot",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"election"
+						"api",
+						"{{$ver}}",
+						"election",
+						"ballot"
 					]
 				}
 			},
 			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "$ver",
+			"value": "v1"
 		}
 	]
 }
